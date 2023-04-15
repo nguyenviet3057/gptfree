@@ -1,0 +1,97 @@
+
+    .page {
+      padding: 16px 16px 96px 16px;
+    }
+    
+    .section-container {
+      padding: 16px;
+      background: #ffffff;
+      border-radius: 8px;
+      margin-bottom: 24px;
+    }    
+
+    .default {
+      background-color: rgba(52,53,65);
+      color: rgba(236,236,241);
+      border: none;
+      padding: 0px;
+    }
+
+    .row-header {
+      position: fixed;
+      top: 0px;
+      z-index: 99;
+      width: 100vw;
+      padding: 10px;
+      margin: 0px;
+      height: 40px;
+      background-color: rgba(52,53,65);
+      font-size: large;
+      font-weight: bold;
+      border-bottom: 1px solid gray;
+    }
+
+    .quiz-content {
+      margin-top: 41px;
+      margin-bottom: 58px;
+    }
+    .card-quiz {
+      background-color: rgba(52,53,65);
+      color: rgba(236,236,241);
+      border: none;
+      padding: 0px;
+    }
+    .card-quiz .row-quiz {
+      border: none;
+      padding: 10px 20px;
+      text-align: justify;
+      white-space: pre-line;
+    }
+
+    .answer {
+      background-color: rgba(68,70,84);
+      color: rgba(236,236,241);
+      border: none;
+    }
+    .footer {
+      position: fixed;
+      left: 0px;
+      bottom: 0px;
+      width: 100vw;
+      margin: 0px;
+      padding: 10px 10px;
+      background-color: rgba(52,53,65);
+      color: rgba(236,236,241);
+      border: none
+    }
+    .input-textarea {
+      background-color: rgba(68,70,84) !important;
+      color: rgba(236,236,241) !important;
+      max-height: 100px;
+      height: 38px;
+      border: none;
+      resize: none; 
+      overflow-y: scroll;
+      box-shadow: none !important;
+    }
+    .button-submit {
+      background-color: rgba(68,70,84) !important;
+      color: rgba(236,236,241) !important;
+      border: none;
+      box-shadow: none !important;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+    
+    .is-loading {
+      animation: spin 3s linear infinite;
+      /* Add any additional styles to your loading element */
+    }
+    
