@@ -13,6 +13,7 @@ const HomePage = () => {
   const [ansList, setAnsList] = useState([]);
   const [ans, setAns] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const isCancelledRef = useRef(false);
 
   const inputRef = useRef(null);
   const quizContentRef = useRef(null);
@@ -32,6 +33,10 @@ const HomePage = () => {
 
     // Call the scrollToBottom function when the component mounts or when the content of the div updates
     scrollToBottom();
+
+    return () => {
+      isCancelledRef.current = false;
+    }
   }, []);
 
   const handleInputChange = (event) => {
@@ -48,6 +53,10 @@ const HomePage = () => {
     let content = ''; // Variable to store the accumulated content
   
     while (true) {
+      console.log(isCancelledRef.current);
+      if (isCancelledRef.current) {
+        break;
+      }
       const { done, value } = await reader.read();
       if (done) break;
 
@@ -124,6 +133,8 @@ const HomePage = () => {
   }
 
   const handleStop = () => {
+    console.log("cancel")
+    isCancelledRef.current = true;
   }
 
   return (
