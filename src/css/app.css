@@ -15,6 +15,8 @@
       color: rgba(236,236,241);
       border: none;
       padding: 0px;
+      overflow: hidden;
+      /* padding-bottom: 59px; */
     }
 
     .row-header {
@@ -30,10 +32,22 @@
       font-weight: bold;
       border-bottom: 1px solid gray;
     }
+    .logo-company {
+      background: url(./images/logo_planx.jpg);
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: contain;
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      margin-right: 8px;
+    }
 
     .quiz-content {
+      height: calc(100vh - 99px);
       margin-top: 41px;
-      margin-bottom: 58px;
+      margin-bottom: 59px;
+      overflow-y: scroll;
     }
     .card-quiz {
       background-color: rgba(52,53,65);
@@ -41,11 +55,18 @@
       border: none;
       padding: 0px;
     }
+    .card-quiz p {
+      padding: 0px;
+      margin: 0px;
+      white-space: pre-line;
+    }
     .card-quiz .row-quiz {
       border: none;
       padding: 10px 20px;
       text-align: justify;
-      white-space: pre-line;
+    }
+    .quiz-content .current-quiz::after {
+      content: " \258C";
     }
 
     .answer {
@@ -62,7 +83,8 @@
       padding: 10px 10px;
       background-color: rgba(52,53,65);
       color: rgba(236,236,241);
-      border: none
+      border: none;
+      border-top: 1px solid gray;
     }
     .input-textarea {
       background-color: rgba(68,70,84) !important;
@@ -95,3 +117,18 @@
       /* Add any additional styles to your loading element */
     }
     
+    .bottom-page {
+      display: none;
+      position: absolute;
+      align-items: center;
+      justify-content: center;
+      right: 15px;
+      bottom: 75px;
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      border: 1px solid darkgray;
+      background-color: rgba(68,70,84,0.8);
+      color: whitesmoke;
+      text-align: center;
+    }

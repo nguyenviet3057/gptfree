@@ -4,6 +4,7 @@ import { Container, Row, Col, InputGroup, Form, Button } from 'react-bootstrap';
 import { Card } from 'react-bootstrap';
 import { BiPaperPlane } from 'react-icons/bi';
 import { BiLoader } from 'react-icons/bi';
+import { TbArrowDown } from 'react-icons/tb';
 import Quiz from '../components/quiz';
 
 const HomePage = () => {
@@ -14,14 +15,28 @@ const HomePage = () => {
   const [ans, setAns] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const isCancelledRef = useRef(false);
+  const isTouchingRef = useRef(false);
 
   const inputRef = useRef(null);
   const quizContentRef = useRef(null);
+  const bottomPageRef = useRef(null);
 
   // Function to scroll to the bottom of the div
   const scrollToBottom = () => {
-    const quizContent = quizContentRef.current;
-    quizContent.scrollTop = quizContent.scrollHeight;
+    // console.log(quizContentRef.current.onMouseDown)
+    if (!isTouchingRef.current) {
+      if (!isLoading) {
+        quizContentRef.current.scrollTo({
+          top: quizContentRef.current.scrollHeight,
+          behavior: 'smooth'
+        });
+      } else {
+        quizContentRef.current.scrollTo({
+          top: quizContentRef.current.scrollHeight,
+          behavior: 'auto'
+        });
+      }
+    } 
   };
 
   useEffect(() => {
@@ -32,6 +47,7 @@ const HomePage = () => {
     }
 
     // Call the scrollToBottom function when the component mounts or when the content of the div updates
+    console.log("construct")
     scrollToBottom();
 
     return () => {
@@ -53,7 +69,7 @@ const HomePage = () => {
     let content = ''; // Variable to store the accumulated content
   
     while (true) {
-      console.log(isCancelledRef.current);
+      // console.log(isCancelledRef.current);
       if (isCancelledRef.current) {
         break;
       }
@@ -78,10 +94,11 @@ const HomePage = () => {
           // Append the sentence to the accumulated content
           content += JSON.parse(sentence).choices[0].delta.content;
           setAns(content);
-          scrollToBottom()
+          // console.log(isTouchingRef.current);
           // console.log(JSON.parse(sentence).choices[0].delta.content);
         }
       }
+      scrollToBottom()
   
       // Update the remaining chunk with the last incomplete sentence
       chunk = sentences[sentences.length - 1];
@@ -101,6 +118,8 @@ const HomePage = () => {
   };
 
   const handleSubmit = async () => {
+    isTouchingRef.current = false
+    isCancelledRef.current = false
     setAns("")
     setQuest("")
     setQuestLatest(quest);
@@ -121,6 +140,7 @@ const HomePage = () => {
       "temperature": 0.5,
       "stream": true
     });
+    // https://free.churchless.tech/v1/chat/completions
     fetch("https://free.churchless.tech/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -137,22 +157,58 @@ const HomePage = () => {
     isCancelledRef.current = true;
   }
 
+  const handleDown = () => {
+    // console.log("down")
+    isTouchingRef.current = true;
+    // console.log(isTouchingRef.current);
+  }
+
+  const handleBottomPage = () => {
+    isTouchingRef.current = false;
+    scrollToBottom();
+  }
+
+  const handleScroll = () => {
+    if (bottomPageRef && quizContentRef) {
+      // console.log(quizContentRef.current.scrollTop, quizContentRef.current.scrollHeight, quizContentRef.current.offsetHeight)
+      if (quizContentRef.current.scrollTop + quizContentRef.current.offsetHeight < quizContentRef.current.scrollHeight - 80) {
+        isTouchingRef.current = true;
+        bottomPageRef.current.style.display = 'flex';
+      } else if (quizContentRef.current.scrollTop + quizContentRef.current.offsetHeight > quizContentRef.current.scrollHeight - 2) {
+        bottomPageRef.current.style.display = 'none';
+        setTimeout(() => {
+          isTouchingRef.current = false;
+        }, 200);
+      }
+    }
+  }
+
   return (
-    <Page ref={quizContentRef} className='default'>
-      <div className='row row-header'>
-        <div className="col text-center">
+    <Page 
+      onPointerDown={handleDown}
+      className='default'
+    >
+      <div className='d-flex flex-row align-items-center justify-content-center row-header'>
+        <a href="https://www.facebook.com/planxdev">
+          <div className='logo-company'></div>
+        </a>
+        <div className="text-center">
           GPT Free
         </div>
       </div>
       <div className='container' style={{ padding: '0px' }}>
-        <div className='container-fluid quiz-content'>
+        <div 
+          ref={quizContentRef} 
+          onScroll={handleScroll}
+          className='container-fluid quiz-content'
+        >
           {questList.map((item, index) => {
             if (index == questList.length - 1) return;
             else return (
               <Quiz key={index} quest={questList[index]} ans={ansList[index]}></Quiz>
             )
           })}
-          {(questLatest=="")? <></> : <Quiz quest={questLatest} ans={ans}></Quiz>}
+          {(questLatest=="")? <></> : <Quiz current={isLoading? "current-quiz" : ""} quest={questLatest} ans={ans}></Quiz>}
           
         </div>
         <div className='footer row'>
@@ -172,6 +228,9 @@ const HomePage = () => {
             </Button>
           </InputGroup>
         </div>
+      </div>
+      <div ref={bottomPageRef} className='bottom-page' onClick={handleBottomPage}>
+        <TbArrowDown />
       </div>
     </Page>
   );
